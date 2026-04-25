@@ -1,156 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wedding Invitation - Aliya & Asif</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation - Aliya & Asif</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        :root {
+            /* Royal Theme (Default) */
+            --bg-main: #4a0404;
+            --arch-bg: #2d0202;
+            --text-main: #f8e5b0;
+            --accent: #d4af37;
+            --soft-gold: #f4e4bc;
+            --petal-colors: #d4af37, #4a0404, #800000;
+        }
 
-<style>
-/* KEEP YOUR ORIGINAL CSS EXACTLY */
-@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap');
+        /* Theme Variations */
+        body.theme-pastel {
+            --bg-main: #e9dcd3;
+            --arch-bg: #fdfaf7;
+            --text-main: #5d514a;
+            --accent: #d9a896;
+            --soft-gold: #c2a688;
+            --petal-colors: #fce4ec, #f8bbd0, #ffffff;
+        }
 
-:root {
-    --bg-main: #4a0404;
-    --arch-bg: #2d0202;
-    --text-main: #f8e5b0;
-    --accent: #d4af37;
-    --soft-gold: #f4e4bc;
-    --petal-colors: #d4af37, #4a0404, #800000;
-}
+        body.theme-midnight {
+            --bg-main: #0f172a;
+            --arch-bg: #1e293b;
+            --text-main: #f1f5f9;
+            --accent: #94a3b8;
+            --soft-gold: #cbd5e1;
+            --petal-colors: #ffffff, #94a3b8, #334155;
+        }
 
-body {
-    margin: 0;
-    background-color: #111;
-    overflow: hidden;
-    font-family: 'Cormorant Garamond', serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
+        body.theme-sage {
+            --bg-main: #707a65;
+            --arch-bg: #f1f2ee;
+            --text-main: #2d3329;
+            --accent: #a3ad91;
+            --soft-gold: #8c967d;
+            --petal-colors: #f1f2ee, #a3ad91, #ffffff;
+        }
 
-/* START BUTTON OVERLAY */
-#startOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 5000;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-#startBtn {
-    padding: 15px 30px;
-    font-size: 20px;
-    background: #d4af37;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
+        body {
+            background-color: #111;
+            overflow: hidden;
+            font-family: 'Cormorant Garamond', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.5s ease;
+        }
 
-/* KEEP REST OF YOUR ORIGINAL STYLES BELOW */
-#video-container {
-    position: relative;
-    width: 100%;
-    max-width: 450px;
-    height: 90vh;
-    background: var(--bg-main);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
+        #video-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 9/16;
+            height: 90vh;
+            background: var(--bg-main);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 4px solid white;
+            transition: all 0.5s ease;
+            /* Force GPU acceleration to stop stuttering */
+            transform: translateZ(0);
+        }
 
-.scene {
-    position: absolute;
-    width: 75%;
-    opacity: 0;
-    text-align: center;
-    color: var(--text-main);
-}
+        #video-container.fullscreen {
+            max-width: none;
+            height: 100vh;
+            width: 100vw;
+            border: none;
+        }
 
-.cursive {
-    font-family: 'Alex Brush', cursive;
-    font-size: 3rem;
-    color: var(--accent);
-}
-</style>
+        .mirhab-arch {
+            position: absolute;
+            width: 85%;
+            height: 80%;
+            background: var(--arch-bg);
+            top: 10%;
+            left: 7.5%;
+            border-radius: 200px 200px 10px 10px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+            z-index: 1;
+            transition: background-color 0.5s ease;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .scene {
+            position: absolute;
+            width: 75%;
+            opacity: 0;
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: var(--text-main);
+            /* Optimize for animation */
+            will-change: opacity, transform;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .arabic {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--soft-gold);
+        }
+
+        .cursive {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+
+        .quran-quote {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .parent-block {
+            font-size: 0.95rem;
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .event-details {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .event-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(128,128,128,0.2);
+            padding-bottom: 5px;
+        }
+
+        .venue-text {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .floral {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            z-index: 5;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .top-left { top: -10px; left: -10px; }
+        .bottom-right { bottom: -10px; right: -10px; transform: scale(-1); }
+
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            z-index: 1000;
+            display: none; 
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .control-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .save-date-circle {
+            width: 100px;
+            height: 100px;
+            border: 1px solid var(--soft-gold);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0 auto;
+            color: var(--soft-gold);
+        }
+
+
+        /* Audio button added only */
+        #musicButton {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 3000;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+    </style>
 </head>
+<body class="theme-royal">
 
-<body>
+    <div id="video-container">
+        <div class="mirhab-arch"></div>
+        
+        <svg class="floral top-left" viewBox="0 0 100 100">
+            <g fill="var(--accent)" fill-opacity="0.5">
+                <circle cx="20" cy="20" r="15" />
+                <circle cx="40" cy="15" r="10" />
+                <circle cx="15" cy="40" r="10" />
+            </g>
+            <path d="M0,0 Q50,0 50,50 Q0,50 0,0" fill="var(--soft-gold)" fill-opacity="0.2" />
+        </svg>
+        <svg class="floral bottom-right" viewBox="0 0 100 100">
+            <g fill="var(--accent)" fill-opacity="0.4">
+                <circle cx="20" cy="20" r="12" />
+                <circle cx="35" cy="15" r="8" />
+            </g>
+        </svg>
 
-<!-- START SCREEN -->
-<div id="startOverlay">
-    <button id="startBtn">Enter Invitation</button>
-</div>
+        <canvas id="petalCanvas"></canvas>
 
-<div id="video-container">
+        <!-- Scene 1 -->
+        <div id="scene1" class="scene">
+            <p class="arabic">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+            <p style="font-size: 0.8rem; letter-spacing: 1px;">In the name of Allah, the most Beneficent & Merciful</p>
+            <div class="cursive" style="font-size: 2.5rem; margin: 20px 0;">Wedding Invitation</div>
+            <p class="quran-quote">"And we have created you in pairs"<br><small>Quran 78:8</small></p>
+            <p style="margin-top: 10px; font-weight: 600; letter-spacing: 2px;">01 / 06 / 2026</p>
+        </div>
 
-    <!-- Scene 1 -->
-    <div id="scene1" class="scene">
-        <p>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
-        <div class="cursive">Wedding Invitation</div>
-        <p>01 / 06 / 2026</p>
+        <!-- Scene 2 -->
+        <div id="scene2" class="scene">
+            <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Assalamu Alaikum</p>
+            <p style="font-size: 0.9rem; margin-bottom: 10px; line-height: 1.4;">With the grace of Allah, we invite you to join us as we celebrate our marriage ceremony</p>
+            
+            <div class="cursive" style="font-size: 2.8rem;">Aliya Qureshi</div>
+            <p class="parent-block">D/o Mrs Sahera Qureshi & <br> Mr Ilyas Qureshi</p>
+            
+            <p style="font-family: 'Alex Brush'; font-size: 1.5rem; color: var(--soft-gold);">&</p>
+            
+            <div class="cursive" style="font-size: 2.8rem;">Abdul Asif</div>
+            <p class="parent-block">S/o Mrs Sahabar Nisha (Pattammal) & <br> Mr Abdul Areef</p>
+        </div>
+
+        <!-- Scene 3 -->
+        <div id="scene3" class="scene">
+            <div class="save-date-circle">
+                <span style="font-size: 0.7rem;">JUNE</span>
+                <span style="font-size: 1.8rem; font-weight: 600;">01</span>
+                <span style="font-size: 0.7rem;">2026</span>
+            </div>
+            
+            <h2 style="margin-top: 20px; letter-spacing: 2px; font-size: 1.4rem;">NIKAH & VALIMA</h2>
+            
+            <div class="event-details">
+                <div class="event-row">
+                    <span>Nikah Time</span>
+                    <span style="font-weight: 600;">5:30 PM</span>
+                </div>
+                <div class="event-row">
+                    <span>Valima Dinner</span>
+                    <span style="font-weight: 600;">7:30 PM</span>
+                </div>
+            </div>
+
+            <div class="venue-text">
+                <strong>at Haq House</strong><br>
+                Lalbagh Road, Near Subiya Circle,<br>
+                Bangalore - 560 002
+            </div>
+        </div>
+
+        <!-- Scene 4 -->
+        <div id="scene4" class="scene">
+            <div class="cursive" style="font-size: 3.5rem;">Thank you</div>
+            <p style="line-height: 1.6; font-size: 1rem; margin: 20px 0;">
+                It would be a great joy for us if you could honor us with your presence and bestow your blessings upon us.
+            </p>
+            <p style="font-style: italic; color: var(--soft-gold);">Walaikumassalam Warahmatullahi wa barakatuh</p>
+            <p style="margin-top: 25px; font-weight: 600; letter-spacing: 1px;">- Aliya & Asif -</p>
+        </div>
     </div>
 
-    <!-- Scene 2 -->
-    <div id="scene2" class="scene">
-        <div class="cursive">Aliya Qureshi</div>
-        <p>&</p>
-        <div class="cursive">Abdul Asif</div>
+    <div id="controls">
+        <div class="control-row">
+            <button class="btn" onclick="setTheme('pastel')">PASTEL</button>
+            <button class="btn" onclick="setTheme('royal')">ROYAL</button>
+            <button class="btn" onclick="setTheme('midnight')">MIDNIGHT</button>
+            <button class="btn" onclick="setTheme('sage')">SAGE</button>
+        </div>
+        <div class="control-row">
+            <button class="btn" onclick="toggleFullscreen()">FULLSCREEN</button>
+            <button class="btn" onclick="location.reload()">REPLAY</button>
+        </div>
     </div>
 
-    <!-- Scene 3 -->
-    <div id="scene3" class="scene">
-        <p>Nikah: 5:30 PM</p>
-        <p>Valima: 7:30 PM</p>
-        <p>Bangalore</p>
-    </div>
+    <script>
+        const canvas = document.getElementById('petalCanvas');
+        const ctx = canvas.getContext('2d');
+        let petals = [];
 
-    <!-- Scene 4 -->
-    <div id="scene4" class="scene">
-        <div class="cursive">Thank You</div>
-    </div>
+        function resize() {
+            const container = document.getElementById('video-container');
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+        }
 
-</div>
+        window.addEventListener('resize', resize);
+        resize();
 
-<!-- AUDIO -->
-<audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
+        class Petal {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height;
+                this.size = Math.random() * 5 + 3;
+                this.speed = Math.random() * 1 + 0.5;
+                this.angle = Math.random() * 360;
+                this.spin = Math.random() * 2 - 1;
+                
+                const colors = getComputedStyle(document.body).getPropertyValue('--petal-colors').split(',');
+                this.color = colors[Math.floor(Math.random() * colors.length)].trim();
+                this.opacity = Math.random() * 0.6 + 0.2;
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle * Math.PI / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.size, this.size/1.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            update() {
+                this.y += this.speed;
+                this.x += Math.sin(this.y / 50);
+                this.angle += this.spin;
+                if (this.y > canvas.height) this.reset();
+            }
+        }
 
-<script>
-const audio = document.getElementById("bgMusic");
+        function initPetals() {
+            petals = [];
+            // Reduced count slightly for better mobile performance
+            for (let i = 0; i < 30; i++) petals.push(new Petal());
+        }
 
-document.getElementById("startBtn").onclick = function() {
-    audio.play().catch(() => {});
-    document.getElementById("startOverlay").style.display = "none";
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < petals.length; i++) {
+                petals[i].update();
+                petals[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        
+        initPetals();
+        animate();
 
-    startAnimation();
-};
+        const tl = gsap.timeline();
 
-function startAnimation() {
-    const tl = gsap.timeline();
+        // Automatic start with 2 second lead time
+        tl.to("#scene1", { opacity: 1, y: -20, duration: 2, ease: "power2.out", delay: 2 })
+          .to("#scene1", { opacity: 0, scale: 1.05, duration: 1.5, delay: 3.5 })
+          .to("#scene2", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
+          .to("#scene2", { opacity: 0, scale: 0.95, duration: 1.5, delay: 4.5 })
+          .to("#scene3", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
+          .to("#scene3", { opacity: 0, y: 20, duration: 1.5, delay: 4 })
+          .to("#scene4", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
+          .call(() => {
+              gsap.to('#controls', { display: 'flex', opacity: 1, duration: 1 });
+          });
 
-    tl.to("#scene1", {opacity:1, duration:2})
-      .to("#scene1", {opacity:0, duration:1, delay:2})
+        function toggleFullscreen() {
+            const container = document.getElementById('video-container');
+            container.classList.toggle('fullscreen');
+            setTimeout(resize, 100);
+        }
 
-      .to("#scene2", {opacity:1, duration:2})
-      .to("#scene2", {opacity:0, duration:1, delay:2})
+        function setTheme(theme) {
+            document.body.className = '';
+            if (theme !== 'royal') {
+                document.body.classList.add('theme-' + theme);
+            } else {
+                document.body.classList.add('theme-royal');
+            }
+            initPetals(); 
+        }
+    </script>
 
-      .to("#scene3", {opacity:1, duration:2})
-      .to("#scene3", {opacity:0, duration:1, delay:2})
+    <!-- Background Music: added only -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-      .to("#scene4", {opacity:1, duration:2});
-}
-</script>
+    <button id="musicButton" type="button">PLAY MUSIC</button>
+
+    <script>
+        // Audio feature added only. Browser requires user click to start audio.
+        const bgMusic = document.getElementById('bgMusic');
+        const musicButton = document.getElementById('musicButton');
+
+        musicButton.addEventListener('click', function () {
+            if (bgMusic.paused) {
+                bgMusic.play().then(function () {
+                    musicButton.textContent = 'PAUSE MUSIC';
+                }).catch(function (error) {
+                    console.log('Music play blocked:', error);
+                });
+            } else {
+                bgMusic.pause();
+                musicButton.textContent = 'PLAY MUSIC';
+            }
+        });
+    </script>
 
 </body>
 </html>
