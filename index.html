@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Wedding Invitation - Aliya & Asif</title>
+    <!-- External Dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
-
         :root {
             /* Royal Theme (Default) */
             --bg-main: #4a0404;
@@ -50,17 +51,58 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #111;
+            background-color: #000;
             overflow: hidden;
             font-family: 'Cormorant Garamond', serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            transition: background-color 0.5s ease;
+            width: 100vw;
+        }
+
+        /* Start Overlay - Critical for Browser Compatibility */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #d4af37;
+            cursor: pointer;
+            transition: opacity 1s ease;
+        }
+
+        #overlay h2 {
+            font-family: 'Alex Brush', cursive;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .start-btn {
+            border: 1px solid #d4af37;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
 
         #video-container {
@@ -70,35 +112,27 @@
             aspect-ratio: 9/16;
             height: 90vh;
             background: var(--bg-main);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            border: 4px solid white;
+            border: 8px solid rgba(255,255,255,0.05);
             transition: all 0.5s ease;
-            /* Force GPU acceleration to stop stuttering */
             transform: translateZ(0);
-        }
-
-        #video-container.fullscreen {
-            max-width: none;
-            height: 100vh;
-            width: 100vw;
-            border: none;
         }
 
         .mirhab-arch {
             position: absolute;
-            width: 85%;
-            height: 80%;
+            width: 88%;
+            height: 82%;
             background: var(--arch-bg);
-            top: 10%;
-            left: 7.5%;
-            border-radius: 200px 200px 10px 10px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+            top: 9%;
+            left: 6%;
+            border-radius: 200px 200px 20px 20px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.3);
             z-index: 1;
             transition: background-color 0.5s ease;
         }
@@ -113,75 +147,88 @@
 
         .scene {
             position: absolute;
-            width: 75%;
+            width: 80%;
             opacity: 0;
             z-index: 15;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             color: var(--text-main);
-            /* Optimize for animation */
             will-change: opacity, transform;
-            transform: translate3d(0, 0, 0);
+            pointer-events: none;
+        }
+
+        .scene.active {
+            pointer-events: auto;
         }
 
         .arabic {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin-bottom: 5px;
             color: var(--soft-gold);
         }
 
         .cursive {
             font-family: 'Alex Brush', cursive;
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             color: var(--accent);
-            margin: 10px 0;
+            margin: 5px 0;
+            line-height: 1.2;
         }
 
         .quran-quote {
             font-size: 1.1rem;
             font-style: italic;
-            margin-bottom: 10px;
             line-height: 1.4;
+            color: var(--soft-gold);
+            opacity: 0.9;
         }
 
         .parent-block {
-            font-size: 0.95rem;
-            margin: 5px 0;
-            line-height: 1.5;
+            font-size: 0.9rem;
+            margin: 2px 0;
+            line-height: 1.4;
+            opacity: 0.9;
         }
 
         .event-details {
             margin-top: 15px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            width: 100%;
+            max-width: 280px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .event-row {
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(128,128,128,0.2);
+            border-bottom: 1px solid rgba(248, 229, 176, 0.2);
             padding-bottom: 5px;
+            font-size: 0.9rem;
         }
 
         .venue-text {
             font-size: 0.85rem;
-            line-height: 1.4;
-            margin-top: 10px;
-            opacity: 0.8;
+            line-height: 1.5;
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px dashed rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
         }
 
         .floral {
             position: absolute;
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             z-index: 5;
-            opacity: 0.6;
+            opacity: 0.4;
             pointer-events: none;
         }
-        .top-left { top: -10px; left: -10px; }
-        .bottom-right { bottom: -10px; right: -10px; transform: scale(-1); }
+        .top-left { top: 0; left: 0; }
+        .bottom-right { bottom: 0; right: 0; transform: rotate(180deg); }
 
         #controls {
             position: absolute;
@@ -191,53 +238,21 @@
             flex-direction: column;
             gap: 10px;
             align-items: center;
+            width: 100%;
         }
 
         .control-row {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .btn {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
             border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.65rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-            color: white;
-        }
-
-        .save-date-circle {
-            width: 100px;
-            height: 100px;
-            border: 1px solid var(--soft-gold);
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            margin: 0 auto;
             color: var(--soft-gold);
-        }
-
-
-        /* Audio button: added only for music playback */
-        #musicBtn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1001;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--accent);
-            color: var(--accent);
             padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
@@ -247,38 +262,77 @@
             transition: all 0.3s;
         }
 
-        #musicBtn:hover {
+        .btn:hover {
             background: var(--accent);
-            color: white;
+            color: #000;
         }
 
+        .save-date-circle {
+            width: 90px;
+            height: 90px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0 auto;
+            color: var(--accent);
+            background: rgba(0,0,0,0.1);
+        }
+
+        #music-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1100;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--accent);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: var(--accent);
+        }
+
+        @media (max-width: 480px) {
+            #video-container {
+                height: 100vh;
+                max-width: 100vw;
+                border: none;
+            }
+        }
     </style>
 </head>
 <body class="theme-royal">
 
-    <!-- Audio: added only for background music -->
-    <audio id="bgMusic" loop preload="auto">
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
-    <button id="musicBtn" onclick="toggleMusic()">PLAY MUSIC</button>
+    <!-- Interaction Overlay -->
+    <div id="overlay" onclick="startInvite()">
+        <h2>Aliya & Asif</h2>
+        <div class="start-btn">OPEN INVITATION</div>
+    </div>
 
+    <!-- Music Toggle -->
+    <div id="music-toggle" onclick="toggleMusic()">
+        <svg id="music-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+        </svg>
+    </div>
 
     <div id="video-container">
         <div class="mirhab-arch"></div>
         
         <svg class="floral top-left" viewBox="0 0 100 100">
-            <g fill="var(--accent)" fill-opacity="0.5">
-                <circle cx="20" cy="20" r="15" />
-                <circle cx="40" cy="15" r="10" />
-                <circle cx="15" cy="40" r="10" />
-            </g>
-            <path d="M0,0 Q50,0 50,50 Q0,50 0,0" fill="var(--soft-gold)" fill-opacity="0.2" />
+            <path d="M0,0 Q50,0 50,50 Q0,50 0,0" fill="var(--accent)" fill-opacity="0.2" />
+            <circle cx="20" cy="20" r="15" fill="var(--accent)" fill-opacity="0.3" />
         </svg>
         <svg class="floral bottom-right" viewBox="0 0 100 100">
-            <g fill="var(--accent)" fill-opacity="0.4">
-                <circle cx="20" cy="20" r="12" />
-                <circle cx="35" cy="15" r="8" />
-            </g>
+            <path d="M0,0 Q50,0 50,50 Q0,50 0,0" fill="var(--accent)" fill-opacity="0.2" />
+            <circle cx="20" cy="20" r="15" fill="var(--accent)" fill-opacity="0.3" />
         </svg>
 
         <canvas id="petalCanvas"></canvas>
@@ -286,39 +340,39 @@
         <!-- Scene 1 -->
         <div id="scene1" class="scene">
             <p class="arabic">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
-            <p style="font-size: 0.8rem; letter-spacing: 1px;">In the name of Allah, the most Beneficent & Merciful</p>
-            <div class="cursive" style="font-size: 2.5rem; margin: 20px 0;">Wedding Invitation</div>
-            <p class="quran-quote">"And we have created you in pairs"<br><small>Quran 78:8</small></p>
-            <p style="margin-top: 10px; font-weight: 600; letter-spacing: 2px;">01 / 06 / 2026</p>
+            <p style="font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;">In the name of Allah</p>
+            <div class="cursive">Wedding Invitation</div>
+            <p class="quran-quote">"And we have created you in pairs"<br><small style="font-size: 0.7rem; letter-spacing: 1px;">- SURAH AN-NABA 78:8 -</small></p>
+            <p style="margin-top: 15px; font-weight: 600; letter-spacing: 3px; font-family: 'Montserrat';">01 . 06 . 2026</p>
         </div>
 
         <!-- Scene 2 -->
         <div id="scene2" class="scene">
-            <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Assalamu Alaikum</p>
-            <p style="font-size: 0.9rem; margin-bottom: 10px; line-height: 1.4;">With the grace of Allah, we invite you to join us as we celebrate our marriage ceremony</p>
+            <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px;">Assalamu Alaikum</p>
+            <p style="font-size: 0.9rem; margin-bottom: 15px; line-height: 1.4;">With the grace of Almighty Allah, we cordially invite you to the wedding of</p>
             
             <div class="cursive" style="font-size: 2.8rem;">Aliya Qureshi</div>
-            <p class="parent-block">D/o Mrs Sahera Qureshi & <br> Mr Ilyas Qureshi</p>
+            <p class="parent-block">Daughter of<br>Mrs Sahera Qureshi & Mr Ilyas Qureshi</p>
             
-            <p style="font-family: 'Alex Brush'; font-size: 1.5rem; color: var(--soft-gold);">&</p>
+            <p style="font-family: 'Alex Brush'; font-size: 1.8rem; color: var(--accent); margin: 5px 0;">&</p>
             
             <div class="cursive" style="font-size: 2.8rem;">Abdul Asif</div>
-            <p class="parent-block">S/o Mrs Sahabar Nisha (Pattammal) & <br> Mr Abdul Areef</p>
+            <p class="parent-block">Son of<br>Mrs Sahabar Nisha & Mr Abdul Areef</p>
         </div>
 
         <!-- Scene 3 -->
         <div id="scene3" class="scene">
             <div class="save-date-circle">
-                <span style="font-size: 0.7rem;">JUNE</span>
-                <span style="font-size: 1.8rem; font-weight: 600;">01</span>
-                <span style="font-size: 0.7rem;">2026</span>
+                <span style="font-size: 0.7rem; letter-spacing: 1px;">JUNE</span>
+                <span style="font-size: 2rem; font-weight: 600; line-height: 1;">01</span>
+                <span style="font-size: 0.7rem; letter-spacing: 1px;">2026</span>
             </div>
             
-            <h2 style="margin-top: 20px; letter-spacing: 2px; font-size: 1.4rem;">NIKAH & VALIMA</h2>
+            <h2 style="margin-top: 15px; letter-spacing: 3px; font-size: 1.3rem; border-bottom: 1px solid var(--accent); display: inline-block; padding-bottom: 5px; margin-bottom: 10px;">NIKAH & VALIMA</h2>
             
             <div class="event-details">
                 <div class="event-row">
-                    <span>Nikah Time</span>
+                    <span>Nikah Ceremony</span>
                     <span style="font-weight: 600;">5:30 PM</span>
                 </div>
                 <div class="event-row">
@@ -328,7 +382,7 @@
             </div>
 
             <div class="venue-text">
-                <strong>at Haq House</strong><br>
+                <strong style="color: var(--accent);">at Haq House</strong><br>
                 Lalbagh Road, Near Subiya Circle,<br>
                 Bangalore - 560 002
             </div>
@@ -336,12 +390,12 @@
 
         <!-- Scene 4 -->
         <div id="scene4" class="scene">
-            <div class="cursive" style="font-size: 3.5rem;">Thank you</div>
-            <p style="line-height: 1.6; font-size: 1rem; margin: 20px 0;">
-                It would be a great joy for us if you could honor us with your presence and bestow your blessings upon us.
+            <div class="cursive" style="font-size: 3.5rem;">Shukran</div>
+            <p style="line-height: 1.6; font-size: 1.1rem; margin: 15px 0;">
+                Your presence and prayers will be the greatest gift on our special day.
             </p>
-            <p style="font-style: italic; color: var(--soft-gold);">Walaikumassalam Warahmatullahi wa barakatuh</p>
-            <p style="margin-top: 25px; font-weight: 600; letter-spacing: 1px;">- Aliya & Asif -</p>
+            <p style="font-style: italic; color: var(--soft-gold); font-size: 0.9rem;">Walaikumassalam Warahmatullahi wa barakatuh</p>
+            <p style="margin-top: 30px; font-weight: 600; letter-spacing: 2px; border-top: 1px solid var(--accent); padding-top: 15px;">- ALIYA & ASIF -</p>
         </div>
     </div>
 
@@ -353,15 +407,22 @@
             <button class="btn" onclick="setTheme('sage')">SAGE</button>
         </div>
         <div class="control-row">
-            <button class="btn" onclick="toggleFullscreen()">FULLSCREEN</button>
             <button class="btn" onclick="location.reload()">REPLAY</button>
+            <button class="btn" onclick="shareInvite()">SHARE</button>
         </div>
     </div>
+
+    <!-- Background Music (Optional - User can add a link) -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         const canvas = document.getElementById('petalCanvas');
         const ctx = canvas.getContext('2d');
+        const bgMusic = document.getElementById('bgMusic');
         let petals = [];
+        let animationStarted = false;
 
         function resize() {
             const container = document.getElementById('video-container');
@@ -377,14 +438,14 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * -canvas.height;
-                this.size = Math.random() * 5 + 3;
-                this.speed = Math.random() * 1 + 0.5;
+                this.size = Math.random() * 6 + 4;
+                this.speed = Math.random() * 1.5 + 0.8;
                 this.angle = Math.random() * 360;
                 this.spin = Math.random() * 2 - 1;
                 
                 const colors = getComputedStyle(document.body).getPropertyValue('--petal-colors').split(',');
                 this.color = colors[Math.floor(Math.random() * colors.length)].trim();
-                this.opacity = Math.random() * 0.6 + 0.2;
+                this.opacity = Math.random() * 0.5 + 0.3;
             }
             draw() {
                 ctx.save();
@@ -393,13 +454,13 @@
                 ctx.globalAlpha = this.opacity;
                 ctx.fillStyle = this.color;
                 ctx.beginPath();
-                ctx.ellipse(0, 0, this.size, this.size/1.5, 0, 0, Math.PI * 2);
+                ctx.ellipse(0, 0, this.size, this.size/1.8, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
             }
             update() {
                 this.y += this.speed;
-                this.x += Math.sin(this.y / 50);
+                this.x += Math.sin(this.y / 60) * 0.5;
                 this.angle += this.spin;
                 if (this.y > canvas.height) this.reset();
             }
@@ -407,8 +468,7 @@
 
         function initPetals() {
             petals = [];
-            // Reduced count slightly for better mobile performance
-            for (let i = 0; i < 30; i++) petals.push(new Petal());
+            for (let i = 0; i < 40; i++) petals.push(new Petal());
         }
 
         function animate() {
@@ -423,24 +483,49 @@
         initPetals();
         animate();
 
-        const tl = gsap.timeline();
+        function startInvite() {
+            if(animationStarted) return;
+            animationStarted = true;
 
-        // Automatic start with 2 second lead time
-        tl.to("#scene1", { opacity: 1, y: -20, duration: 2, ease: "power2.out", delay: 2 })
-          .to("#scene1", { opacity: 0, scale: 1.05, duration: 1.5, delay: 3.5 })
-          .to("#scene2", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
-          .to("#scene2", { opacity: 0, scale: 0.95, duration: 1.5, delay: 4.5 })
-          .to("#scene3", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
-          .to("#scene3", { opacity: 0, y: 20, duration: 1.5, delay: 4 })
-          .to("#scene4", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
-          .call(() => {
-              gsap.to('#controls', { display: 'flex', opacity: 1, duration: 1 });
-          });
+            // Hide Overlay
+            gsap.to("#overlay", { 
+                opacity: 0, 
+                duration: 1, 
+                onComplete: () => {
+                    document.getElementById('overlay').style.display = 'none';
+                    document.getElementById('music-toggle').style.display = 'flex';
+                }
+            });
 
-        function toggleFullscreen() {
-            const container = document.getElementById('video-container');
-            container.classList.toggle('fullscreen');
-            setTimeout(resize, 100);
+            // Start Music (Will work now because of user gesture)
+            bgMusic.play().catch(e => console.log("Music blocked"));
+
+            // Start Timeline
+            const tl = gsap.timeline();
+            
+            tl.to("#scene1", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
+              .to("#scene1", { opacity: 0, scale: 1.1, duration: 1.5, delay: 4 })
+              
+              .to("#scene2", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
+              .to("#scene2", { opacity: 0, scale: 0.9, duration: 1.5, delay: 5 })
+              
+              .to("#scene3", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
+              .to("#scene3", { opacity: 0, y: 30, duration: 1.5, delay: 5 })
+              
+              .to("#scene4", { opacity: 1, y: -20, duration: 2, ease: "power2.out" })
+              .call(() => {
+                  gsap.to('#controls', { display: 'flex', opacity: 1, duration: 1 });
+              });
+        }
+
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                document.getElementById('music-icon').style.opacity = "1";
+            } else {
+                bgMusic.pause();
+                document.getElementById('music-icon').style.opacity = "0.5";
+            }
         }
 
         function setTheme(theme) {
@@ -453,23 +538,23 @@
             initPetals(); 
         }
 
-        // Audio: added only for background music. Animation code above is unchanged.
-        const bgMusic = document.getElementById('bgMusic');
-        const musicBtn = document.getElementById('musicBtn');
-
-        function toggleMusic() {
-            if (bgMusic.paused) {
-                bgMusic.play().then(() => {
-                    musicBtn.textContent = 'PAUSE MUSIC';
-                }).catch((error) => {
-                    console.log('Music play blocked:', error);
+        function shareInvite() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Wedding Invitation: Aliya & Asif',
+                    text: 'Please join us on our special day!',
+                    url: window.location.href
                 });
             } else {
-                bgMusic.pause();
-                musicBtn.textContent = 'PLAY MUSIC';
+                const dummy = document.createElement('input');
+                document.body.appendChild(dummy);
+                dummy.value = window.location.href;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                alert('Link copied to clipboard!');
             }
         }
-
     </script>
 </body>
 </html>
