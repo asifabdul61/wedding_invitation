@@ -3,73 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wedding Invitation</title>
+<title>Wedding Invitation - Aliya & Asif</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
 <style>
+/* KEEP YOUR ORIGINAL CSS EXACTLY */
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap');
+
+:root {
+    --bg-main: #4a0404;
+    --arch-bg: #2d0202;
+    --text-main: #f8e5b0;
+    --accent: #d4af37;
+    --soft-gold: #f4e4bc;
+    --petal-colors: #d4af37, #4a0404, #800000;
+}
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #ffecd2, #fcb69f);
-    text-align: center;
-    color: #333;
+    background-color: #111;
+    overflow: hidden;
+    font-family: 'Cormorant Garamond', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.container {
-    margin-top: 100px;
+/* START BUTTON OVERLAY */
+#startOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
 }
 
-h1 {
-    font-size: 40px;
-    margin-bottom: 10px;
-}
-
-h2 {
-    font-size: 28px;
-    margin: 10px 0;
-}
-
-p {
+#startBtn {
+    padding: 15px 30px;
     font-size: 20px;
-}
-
-button {
-    margin-top: 30px;
-    padding: 12px 25px;
-    font-size: 18px;
-    border: none;
-    background: #ff7a7a;
+    background: #d4af37;
     color: white;
+    border: none;
     border-radius: 8px;
     cursor: pointer;
 }
 
-button:hover {
-    background: #ff5252;
+/* KEEP REST OF YOUR ORIGINAL STYLES BELOW */
+#video-container {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    height: 90vh;
+    background: var(--bg-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.scene {
+    position: absolute;
+    width: 75%;
+    opacity: 0;
+    text-align: center;
+    color: var(--text-main);
+}
+
+.cursive {
+    font-family: 'Alex Brush', cursive;
+    font-size: 3rem;
+    color: var(--accent);
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h1>You're Invited!</h1>
-    <h2>Wedding Celebration</h2>
-    <p>We request your presence at our special day</p>
-
-    <p><strong>Date:</strong> 10th December 2026</p>
-    <p><strong>Venue:</strong> Your Venue Name</p>
-
-    <button onclick="playMusic()">Enter Invitation</button>
+<!-- START SCREEN -->
+<div id="startOverlay">
+    <button id="startBtn">Enter Invitation</button>
 </div>
 
+<div id="video-container">
+
+    <!-- Scene 1 -->
+    <div id="scene1" class="scene">
+        <p>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</p>
+        <div class="cursive">Wedding Invitation</div>
+        <p>01 / 06 / 2026</p>
+    </div>
+
+    <!-- Scene 2 -->
+    <div id="scene2" class="scene">
+        <div class="cursive">Aliya Qureshi</div>
+        <p>&</p>
+        <div class="cursive">Abdul Asif</div>
+    </div>
+
+    <!-- Scene 3 -->
+    <div id="scene3" class="scene">
+        <p>Nikah: 5:30 PM</p>
+        <p>Valima: 7:30 PM</p>
+        <p>Bangalore</p>
+    </div>
+
+    <!-- Scene 4 -->
+    <div id="scene4" class="scene">
+        <div class="cursive">Thank You</div>
+    </div>
+
+</div>
+
+<!-- AUDIO -->
 <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-function playMusic() {
-    const audio = document.getElementById("bgMusic");
-    audio.play();
+const audio = document.getElementById("bgMusic");
+
+document.getElementById("startBtn").onclick = function() {
+    audio.play().catch(() => {});
+    document.getElementById("startOverlay").style.display = "none";
+
+    startAnimation();
+};
+
+function startAnimation() {
+    const tl = gsap.timeline();
+
+    tl.to("#scene1", {opacity:1, duration:2})
+      .to("#scene1", {opacity:0, duration:1, delay:2})
+
+      .to("#scene2", {opacity:1, duration:2})
+      .to("#scene2", {opacity:0, duration:1, delay:2})
+
+      .to("#scene3", {opacity:1, duration:2})
+      .to("#scene3", {opacity:0, duration:1, delay:2})
+
+      .to("#scene4", {opacity:1, duration:2});
 }
 </script>
 
