@@ -228,9 +228,40 @@
             color: var(--soft-gold);
         }
 
+
+        /* Audio button: added only for music playback */
+        #musicBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        #musicBtn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
     </style>
 </head>
 <body class="theme-royal">
+
+    <!-- Audio: added only for background music -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicBtn" onclick="toggleMusic()">PLAY MUSIC</button>
+
 
     <div id="video-container">
         <div class="mirhab-arch"></div>
@@ -421,6 +452,24 @@
             }
             initPetals(); 
         }
+
+        // Audio: added only for background music. Animation code above is unchanged.
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play().then(() => {
+                    musicBtn.textContent = 'PAUSE MUSIC';
+                }).catch((error) => {
+                    console.log('Music play blocked:', error);
+                });
+            } else {
+                bgMusic.pause();
+                musicBtn.textContent = 'PLAY MUSIC';
+            }
+        }
+
     </script>
 </body>
 </html>
