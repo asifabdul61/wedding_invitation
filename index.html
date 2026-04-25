@@ -1,95 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Invitation - Aliya & Asif</title>
-    <meta property="og:title" content="Wedding Invitation - Aliya & Asif">
-    <meta property="og:description" content="We invite you to join us on June 1st, 2026.">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Invitation</title>
 
-        :root {
-            --bg-main: #4a0404;
-            --arch-bg: #2d0202;
-            --text-main: #f8e5b0;
-            --accent: #d4af37;
-            --soft-gold: #f4e4bc;
-            --petal-colors: #d4af37, #4a0404, #800000;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #ffecd2, #fcb69f);
+    text-align: center;
+    color: #333;
+}
 
-        body.theme-pastel {
-            --bg-main: #e9dcd3; --arch-bg: #fdfaf7; --text-main: #5d514a; --accent: #d9a896; --soft-gold: #c2a688; --petal-colors: #fce4ec, #f8bbd0, #ffffff;
-        }
+.container {
+    margin-top: 100px;
+}
 
-        body.theme-midnight {
-            --bg-main: #0f172a; --arch-bg: #1e293b; --text-main: #f1f5f9; --accent: #94a3b8; --soft-gold: #cbd5e1; --petal-colors: #ffffff, #94a3b8, #334155;
-        }
+h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
 
-        body.theme-sage {
-            --bg-main: #707a65; --arch-bg: #f1f2ee; --text-main: #2d3329; --accent: #a3ad91; --soft-gold: #8c967d; --petal-colors: #f1f2ee, #a3ad91, #ffffff;
-        }
+h2 {
+    font-size: 28px;
+    margin: 10px 0;
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+p {
+    font-size: 20px;
+}
 
-        body {
-            background-color: #111;
-            overflow: hidden;
-            font-family: 'Cormorant Garamond', serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+button {
+    margin-top: 30px;
+    padding: 12px 25px;
+    font-size: 18px;
+    border: none;
+    background: #ff7a7a;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
 
-        #video-container {
-            position: relative;
-            width: 100%;
-            max-width: 450px;
-            aspect-ratio: 9/16;
-            height: 90vh;
-            background: var(--bg-main);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            border: 4px solid white;
-            transform: translateZ(0);
-        }
+button:hover {
+    background: #ff5252;
+}
+</style>
+</head>
 
-        #video-container.fullscreen { max-width: none; height: 100vh; width: 100vw; border: none; }
+<body>
 
-        .mirhab-arch {
-            position: absolute; width: 85%; height: 80%; background: var(--arch-bg);
-            top: 10%; left: 7.5%; border-radius: 200px 200px 10px 10px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.05); z-index: 1;
-        }
+<div class="container">
+    <h1>You're Invited!</h1>
+    <h2>Wedding Celebration</h2>
+    <p>We request your presence at our special day</p>
 
-        canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 10; }
+    <p><strong>Date:</strong> 10th December 2026</p>
+    <p><strong>Venue:</strong> Your Venue Name</p>
 
-        .scene {
-            position: absolute; width: 75%; opacity: 0; z-index: 15;
-            display: flex; flex-direction: column; gap: 10px; color: var(--text-main);
-            will-change: opacity, transform; transform: translate3d(0, 0, 0);
-        }
+    <button onclick="playMusic()">Enter Invitation</button>
+</div>
 
-        .arabic { font-size: 1.5rem; color: var(--soft-gold); }
-        .cursive { font-family: 'Alex Brush', cursive; font-size: 3.5rem; color: var(--accent); margin: 10px 0; }
-        .quran-quote { font-size: 1.1rem; font-style: italic; line-height: 1.4; }
-        .parent-block { font-size: 0.95rem; line-height: 1.5; }
-        .event-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(128,128,128,0.2); padding-bottom: 5px; }
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
 
-        #music-toggle {
-            position: absolute; top: 20px; right: 20px; z-index: 1001;
-            background: rgba(0,0,0,0.3); border: 1px solid var(--accent);
-            color: var(--accent); width: 35px; height: 35px; border-radius: 50%;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
+<script>
+function playMusic() {
+    const audio = document.getElementById("bgMusic");
+    audio.play();
+}
+</script>
 
-        #controls {
-            position: absolute; bottom: 20px; z-index: 1000;
-            display: none; flex-direction: column; gap
+</body>
+</html>
