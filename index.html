@@ -228,24 +228,6 @@
             color: var(--soft-gold);
         }
 
-
-        /* Audio button added only */
-        #musicButton {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 3000;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 8px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
     </style>
 </head>
 <body class="theme-royal">
@@ -440,33 +422,5 @@
             initPetals(); 
         }
     </script>
-
-    <!-- Background Music: added only -->
-    <audio id="bgMusic" loop preload="auto">
-        <source src="music.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
-    <button id="musicButton" type="button">PLAY MUSIC</button>
-
-    <script>
-        // Audio feature added only. Browser requires user click to start audio.
-        const bgMusic = document.getElementById('bgMusic');
-        const musicButton = document.getElementById('musicButton');
-
-        musicButton.addEventListener('click', function () {
-            if (bgMusic.paused) {
-                bgMusic.play().then(function () {
-                    musicButton.textContent = 'PAUSE MUSIC';
-                }).catch(function (error) {
-                    console.log('Music play blocked:', error);
-                });
-            } else {
-                bgMusic.pause();
-                musicButton.textContent = 'PLAY MUSIC';
-            }
-        });
-    </script>
-
 </body>
 </html>
